@@ -38,11 +38,20 @@ function HomePage() {
   }
 
   async function addObject() {
-    const addDataToDb = await axios.post("http://localhost:5000/addData", {
-      task,
-      timeToComplete,
-      priority,
-    });
+    const graphqlQuery = {
+      query: `mutation {
+        createTask(taskInput: {task: "${task}", priority: "${priority}", timeToComplete: "${timeToComplete}"}) {
+          task
+          id
+          priority
+        }
+      }`,
+    };
+
+    const addDataToDb = await axios.post(
+      "http://localhost:5000/graphql",
+      graphqlQuery
+    );
     setButtonClicked(!buttonClicked);
     setTask("");
     setPriority("select priority");

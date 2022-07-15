@@ -31,9 +31,18 @@ function TaskHolder(props) {
   async function deleteItem(e) {
     // e.preventDefault();
     console.log(props.elem.id);
-    const deleteItem = await axios.post("http://localhost:5000/deleteData", {
-      id: props.elem.id,
-    });
+    const graphqlQuery = {
+      query: `mutation {
+        deleteTask(taskInput: {id: ${props.elem.id}}) {
+          message
+        }
+      }`,
+    };
+    console.log(graphqlQuery);
+    const deleteItem = await axios.post(
+      "http://localhost:5000/graphql",
+      graphqlQuery
+    );
     console.log(
       "🚀 ~ file: taskHolder.js ~ line 32 ~ deleteItem ~ deleteItem",
       deleteItem

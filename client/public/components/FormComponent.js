@@ -25,12 +25,18 @@ function FormComponent(props) {
   }
 
   async function updateObject() {
-    const updateDb = await axios.post("http://localhost:5000/updateData", {
-      id: props.itemId,
-      task,
-      timeToComplete,
-      priority,
-    });
+    const graphqlQuery = {
+      query: `mutation {
+        updateTask(taskInput: {id: ${props.itemId}, task: "${task}", priority: "${priority}", timeToComplete: "${timeToComplete}"}) {
+          task
+          priority
+        }
+      }`,
+    };
+    const updateDb = await axios.post(
+      "http://localhost:5000/graphql",
+      graphqlQuery
+    );
     setButtonClicked(!buttonClicked);
     setTask("");
     setPriority("select priority");
